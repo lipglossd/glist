@@ -26,7 +26,7 @@ app.get('/plist', (req, res) => {
 <key>title</key><string>${plistInfo.title}</string>
 </dict></dict></array></dict></plist>`.trim()
         
-        res.setHeader('Content-Type', 'text/xml charset=utf-8')
+        res.setHeader('Content-Type', 'text/xml; charset=utf-8')
         return res.send(plist)
     } catch (e) {
         return res.status(400).send('Invalid base64 data')
