@@ -13,7 +13,7 @@
   "license": "ISC",
   "author": "lipglossd",
   "type": "module",
-  "main": "h.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
