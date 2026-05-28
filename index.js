@@ -11,21 +11,52 @@ app.get('/plist', (req, res) => {
     try {
         const plistInfo = JSON.parse(Buffer.from(base64Content, 'base64').toString())
         
+        const safeUrl = (url) => {
+            if (!url) return ''
+            return url.trim().split('/').map(segment => {
+                return segment.includes(':') ? segment : encodeURIComponent(segment)
+            }).join('/')
+        }
+
         const plistContent = `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0"><dict><key>items</key><array><dict><key>assets</key><array><dict>
-<key>kind</key><string>software-package</string>
-<key>url</key><string>${plistInfo.ipa_url}</string>
-</dict><dict>
-<key>kind</key><string>display-image</string>
-<key>needs-shine</key><false/>
-<key>url</key><string>${plistInfo.img_url}</string>
-</dict></array><key>metadata</key><dict>
-<key>bundle-identifier</key><string>${plistInfo.bundleId}</string>
-<key>bundle-version</key><string>${plistInfo.version.split(' ')[0]}</string>
-<key>kind</key><string>software</string>
-<key>title</key><string>${plistInfo.title}</string>
-</dict></dict></array></dict></plist>`.trim()
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+        <key>items</key>
+        <array>
+            <dict>
+            <key>assets</key>
+            <array>
+                <dict>
+                <key>kind</key>
+                <string>software-package</string>
+                <key>url</key>
+                <string>${safeUrl(plistInfo.ipa_url)}</string>
+                </dict>
+                <dict>
+                <key>kind</key>
+                <string>display-image</string>
+                <key>needs-shine</key>
+                <false/>
+                <key>url</key>
+                <string>https://lipglossd.github.io${safeUrl(plistInfo.img_url)}</string>
+                </dict>
+            </array>
+            <key>metadata</key>
+            <dict>
+                <key>bundle-identifier</key>
+                <string>${plistInfo.bundleId.trim()}</string>
+                <key>bundle-version</key>
+                <string>${plistInfo.version.split(' ')[0].trim()}</string>
+                <key>kind</key>
+                <string>software</string>
+                <key>title</key>
+                <string>${plistInfo.title.trim()}</string>
+            </dict>
+            </dict>
+        </array>
+        </dict>
+        </plist>`.trim()
         
         res.setHeader('Content-Type', 'text/xml; charset=utf-8')
         res.send(plistContent)
