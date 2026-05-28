@@ -35,7 +35,7 @@ app.get('/plist', async (req, res) => {
                 return response.url
             } catch (error) {
                 console.error(error.message)
-                return archiveUrl
+                return url
             }
         }
 
