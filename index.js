@@ -39,7 +39,7 @@ app.get('/plist', (req, res) => {
                 <key>needs-shine</key>
                 <false/>
                 <key>url</key>
-                <string>https://lipglossd.github.io${safeUrl(plistInfo.img_url)}</string>
+                <string>https://lipglossd.github.io/${safeUrl(plistInfo.img_url)}</string>
                 </dict>
             </array>
             <key>metadata</key>
