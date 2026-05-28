@@ -11,32 +11,6 @@ app.get('/plist', async (req, res) => {
     try {
         const plistInfo = JSON.parse(Buffer.from(base64Content, 'base64').toString())
 
-        async function getDirectUrl(url) {
-            try {
-                const response = await fetch(url, { 
-                    method: 'HEAD', 
-                    redirect: 'manual',
-                    headers: {
-                        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:151.0) Gecko/20100101 Firefox/151.0",
-                    },
-                })
-
-                if (response.status === 301 || response.status === 302) {
-                    const directUrl = response.headers.get('location')
-                    
-                    if (directUrl && directUrl !== url)
-                        return await getDirectUrl(directUrl)
-                }
-
-                return response.url
-            } catch (error) {
-                console.error(error.message)
-                return url
-            }
-        }
-
-        const directUrl = await getDirectUrl(plistInfo.ipa_url)
-
         const plistContent = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -50,7 +24,7 @@ app.get('/plist', async (req, res) => {
                         <key>kind</key>
                         <string>software-package</string>
                         <key>url</key>
-                        <string>${directUrl}</string>
+                        <string>${plistInfo.ipa_url}</string>
                     </dict>
                     <dict>
                         <key>kind</key>
