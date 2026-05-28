@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "h.js",
+      "src": "index.js",
       "use": "@vercel/express"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "h.js"
+      "dest": "index.js"
     }
   ]
 }
