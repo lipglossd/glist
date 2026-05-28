@@ -3,7 +3,7 @@ const app = express()
 
 app.enable('trust proxy')
 
-app.get('/plist', (req, res) => {
+app.get('/plist', async (req, res) => {
     const base64Content = req.query.content
     if (!base64Content)
         return res.status(400).send('No content provided')
@@ -16,6 +16,27 @@ app.get('/plist', (req, res) => {
             return url.trim().split('/').map(segment => {
                 return segment.includes(':') ? segment : encodeURIComponent(segment)
             }).join('/')
+        }
+
+        async function getDirectUrl(url) {
+            try {
+                const response = await fetch(url, { 
+                    method: 'HEAD', 
+                    redirect: 'manual' 
+                })
+
+                if (response.status === 301 || response.status === 302) {
+                    const directUrl = response.headers.get('location')
+                    
+                    if (directUrl && directUrl !== url)
+                        return await getDirectUrl(directUrl)
+                }
+
+                return response.url
+            } catch (error) {
+                console.error(error.message)
+                return archiveUrl
+            }
         }
 
         const plistContent = `<?xml version="1.0" encoding="UTF-8"?>
@@ -31,7 +52,7 @@ app.get('/plist', (req, res) => {
                 <key>kind</key>
                 <string>software-package</string>
                 <key>url</key>
-                <string>${safeUrl(plistInfo.ipa_url)}</string>
+                <string>${safeUrl(await getDirectUrl(plistInfo.ipa_url))}</string>
                 </dict>
                 <dict>
                 <key>kind</key>
