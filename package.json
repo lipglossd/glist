@@ -1,0 +1,23 @@
+{
+  "name": "glist",
+  "version": "1.0.0",
+  "description": "glist - plist generator",
+  "homepage": "https://github.com/lipglossd/glist#readme",
+  "bugs": {
+    "url": "https://github.com/lipglossd/glist/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lipglossd/glist.git"
+  },
+  "license": "ISC",
+  "author": "lipglossd",
+  "type": "module",
+  "main": "h.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
