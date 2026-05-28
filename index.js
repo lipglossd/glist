@@ -9,7 +9,8 @@ app.get('/plist', (req, res) => {
         return res.status(400).send('No content provided')
 
     try {
-        const plistInfo = JSON.parse(Buffer.from(base64Content, 'base64').toString('utf-8'))
+        const plistInfo = JSON.parse(Buffer.from(base64Content, 'base64').toString())
+        
         const plistContent = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict><key>items</key><array><dict><key>assets</key><array><dict>
@@ -27,9 +28,9 @@ app.get('/plist', (req, res) => {
 </dict></dict></array></dict></plist>`.trim()
         
         res.setHeader('Content-Type', 'text/xml; charset=utf-8')
-        return res.send(plist)
+        res.send(plistContent)
     } catch (e) {
-        return res.status(400).send('Invalid base64 data')
+        res.status(400).send(e.message)
     }
 })
 
