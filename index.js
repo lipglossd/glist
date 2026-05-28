@@ -10,13 +10,6 @@ app.get('/plist', async (req, res) => {
 
     try {
         const plistInfo = JSON.parse(Buffer.from(base64Content, 'base64').toString())
-        
-        const safeUrl = (url) => {
-            if (!url) return ''
-            return url.trim().split('/').map(segment => {
-                return segment.includes(':') ? segment : encodeURIComponent(segment)
-            }).join('/')
-        }
 
         async function getDirectUrl(url) {
             try {
@@ -52,7 +45,7 @@ app.get('/plist', async (req, res) => {
                 <key>kind</key>
                 <string>software-package</string>
                 <key>url</key>
-                <string>${safeUrl(await getDirectUrl(plistInfo.ipa_url))}</string>
+                <string>${await getDirectUrl(plistInfo.ipa_url)}</string>
                 </dict>
                 <dict>
                 <key>kind</key>
@@ -60,7 +53,7 @@ app.get('/plist', async (req, res) => {
                 <key>needs-shine</key>
                 <false/>
                 <key>url</key>
-                <string>https://lipglossd.github.io/${safeUrl(plistInfo.img_url)}</string>
+                <string>https://lipglossd.github.io/${plistInfo.img_url}</string>
                 </dict>
             </array>
             <key>metadata</key>
