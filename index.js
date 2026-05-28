@@ -15,7 +15,10 @@ app.get('/plist', async (req, res) => {
             try {
                 const response = await fetch(url, { 
                     method: 'HEAD', 
-                    redirect: 'manual' 
+                    redirect: 'manual',
+                    headers: {
+                        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:151.0) Gecko/20100101 Firefox/151.0",
+                    },
                 })
 
                 if (response.status === 301 || response.status === 302) {
@@ -32,6 +35,8 @@ app.get('/plist', async (req, res) => {
             }
         }
 
+        const directUrl = await getDirectUrl(plistInfo.ipa_url)
+
         const plistContent = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -45,7 +50,7 @@ app.get('/plist', async (req, res) => {
                         <key>kind</key>
                         <string>software-package</string>
                         <key>url</key>
-                        <string>${await getDirectUrl(plistInfo.ipa_url)}</string>
+                        <string>${directUrl}</string>
                     </dict>
                     <dict>
                         <key>kind</key>
